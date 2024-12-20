@@ -65,7 +65,6 @@ fun main() {
         return memory
     }
 
-
     // Not working, i decide to write it in Java
     fun part2(inputStr: String): Long {
         data class Location(val value: Int, val size: Int, var prev: Location? = null, var next: Location? = null) {

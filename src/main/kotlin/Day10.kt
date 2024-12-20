@@ -12,8 +12,6 @@ fun main() {
     }
 
     val input = readInput("day10_1")
-    Day10Java().part1(input).println()
-
-    //part1(input).println()
-   // part2(input).println()
+    Day10Java(false).part1and2(input).println()
+    Day10Java(true).part1and2(input).println()
 }

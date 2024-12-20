@@ -1,5 +1,4 @@
 import kotlin.Pair;
-import org.jetbrains.annotations.NotNull;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -13,7 +12,13 @@ public class Day10Java {
     private int maxY;
     private Map<Integer, List<Pair<Integer, Integer>>> reached = new HashMap<>();
 
-    public long part1(List<String> input) {
+    private final boolean isPart2;
+
+    public Day10Java(boolean isPart2) {
+        this.isPart2 = isPart2;
+    }
+
+    public long part1and2(List<String> input) {
         maxY = input.size() - 1;
         maxX = input.getFirst().length() - 1;
         map = new int[maxY + 1][maxX + 1];
@@ -51,6 +56,10 @@ public class Day10Java {
             return 0;
         }
         if (prevLevel == 8 && currentLevel == 9) {
+            if (isPart2) {
+                return 1;
+            }
+
             if (reached.get(startId).contains(new Pair<>(x, y))) {
                 return 0;
             } else {
