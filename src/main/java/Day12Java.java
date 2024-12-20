@@ -1,14 +1,16 @@
 import kotlin.Pair;
 import org.jetbrains.annotations.NotNull;
 
+import javax.swing.*;
 import java.util.ArrayList;
 import java.util.List;
 
 public class Day12Java {
 
     private final static List<Pair<Integer, Integer>> directionsToSearch = List.of(new Pair<>(0, 1),new Pair<>(-1, 0), new Pair<>(1, 0), new Pair<>(0, -1));
+    private final static List<Pair<String,Pair<Integer, Integer>>> directionsToSearchWithDirections = List.of(new Pair<>("UP", new Pair<>(0, 1)),new Pair<>("LEFT", new Pair<>(-1, 0)), new Pair<>("RIGHT", new Pair<>(1, 0)), new Pair<>("DOWN", new Pair<>(0, -1)));
 
-    public Long part1(List<String> input) {
+    public Long part12(List<String> input, boolean isPart2) {
         int maxX = input.get(0).length() - 1;
         int maxY = input.size() - 1;
         char[][] map = new char[maxY + 1][maxX + 1];
@@ -34,9 +36,9 @@ public class Day12Java {
         for (Region region : regions) {
             char regionType = region.type;
             int regionArea = region.getArea();
-            int regionPerimeter = region.getPerimeter();
-            System.out.println("Region type: " + regionType + " Area: " + regionArea + " Perimeter: " + regionPerimeter);
-            price += (long) regionArea * regionPerimeter;
+            int multiplier = isPart2 ? region.getSides() : region.getPerimeter();
+            System.out.println("Region type: " + regionType + " Area: " + regionArea + " Perimeter/Sides: " + multiplier);
+            price += (long) regionArea * multiplier;
         }
 
         return price;
@@ -89,6 +91,63 @@ public class Day12Java {
                 }
             }
             return sum;
+        }
+
+        int getSides() {
+            List<Bound> bounds = new ArrayList<>();
+            for (Pair<Integer, Integer> point : points) {
+                int x = point.getFirst();
+                int y = point.getSecond();
+
+                for (Pair<String, Pair<Integer, Integer>> direction : directionsToSearchWithDirections) {
+                    int x1 = x + direction.getSecond().getFirst();
+                    int y1 = y + direction.getSecond().getSecond();
+                    if (!points.contains(new Pair<>(x1, y1))) {
+                        bounds.add(new Bound(x, y, direction.getFirst()));
+                    }
+                }
+            }
+
+            List<Side> sides = new ArrayList<>();
+            for (Bound bound : bounds) {
+                boolean found = false;
+                for (Side side : sides) {
+                    if (side.canBeAttached(bound)) {
+                        side.bounds.add(bound);
+                        found = true;
+                        break;
+                    }
+                }
+                if (!found) {
+                    List<Bound> list = new ArrayList<>();
+                    list.add(bound);
+                    sides.add(new Side(list, bound.o));
+                }
+            }
+
+            return sides.size();
+        }
+    }
+
+    record Bound(int x, int y, String o) {}
+    record Side(List<Bound> bounds, String o) {
+        boolean canBeAttached(Bound bound) {
+            if (!o.equals(bound.o)) {
+                return false;
+            }
+            for (Bound b : bounds) {
+                if (b.x == bound.x) {
+                    if(b.y - 1 == bound.y || b.y + 1 == bound.y) {
+                        return true;
+                    }
+                }
+                if (b.y == bound.y) {
+                    if (b.x - 1 == bound.x || b.x + 1 == bound.x) {
+                        return true;
+                    }
+                }
+            }
+            return false;
         }
     }
 

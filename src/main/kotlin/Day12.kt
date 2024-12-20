@@ -62,5 +62,5 @@ fun main() {
 
     val input = readInput("day12_1")
     // part1(input).println()
-    Day12Java().part1(input).println()
+    Day12Java().part12(input, true).println()
 }
