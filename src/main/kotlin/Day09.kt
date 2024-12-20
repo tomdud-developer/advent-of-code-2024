@@ -1,5 +1,6 @@
 package com.xtb
 
+import JavaDay09
 import java.util.stream.IntStream
 
 fun main() {
@@ -45,6 +46,27 @@ fun main() {
         }.sum()
     }
 
+    fun convertInput(inputStr: String): List<Int> {
+        val input = inputStr.trim().split("").filter { it.isNotEmpty() }.map { it.toInt() }
+
+        var isFile = true
+        var id = 0
+        val memory = mutableListOf<Int>()
+
+        input.forEach {
+            if (isFile) {
+                IntStream.rangeClosed(1, it).forEach { memory.add(id) }
+                id++
+            } else {
+                IntStream.rangeClosed(1, it).forEach { memory.add((-1)) }
+            }
+            isFile = !isFile
+        }
+        return memory
+    }
+
+
+    // Not working, i decide to write it in Java
     fun part2(inputStr: String): Long {
         data class Location(val value: Int, val size: Int, var prev: Location? = null, var next: Location? = null) {
             fun isEmpty(): Boolean {
@@ -156,6 +178,10 @@ fun main() {
     }
 
     val input = readInput("day09_1")
-    part1(input[0]).println()
-    part2(input[0]).println()
+
+    // part1(input[0]).println()
+    // part2(input[0]).println()
+    // part2_seo(input[0]).println()
+
+    JavaDay09().part2(convertInput(input[0])).println()
 }
